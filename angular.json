@@ -72,6 +72,9 @@
         },
         "test": {
           "builder": "@analogjs/vitest-angular:test"
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
