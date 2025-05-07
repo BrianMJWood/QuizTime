@@ -20,6 +20,11 @@ export class QuizComponent {
   selectedAnswer = this.#questionFacade.currentQuestionAnswer;
   isPrev = this.#questionFacade.isPrev;
   isNext = this.#questionFacade.isNext;
+  isLoading = this.#questionFacade.isLoading;
+
+  onSubmitCategory(category: string) {
+    this.#questionFacade.submitCategory(category);
+  }
 
   onAnswerQuestion(answer: number) {
     this.#questionFacade.answerQuestion(answer);

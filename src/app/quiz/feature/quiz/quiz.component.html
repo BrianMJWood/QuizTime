@@ -1,14 +1,37 @@
-<app-question [selectedAnswer]="selectedAnswer()" (answerQuestion)="onAnswerQuestion($event)" [question]="currentQuestion()!"></app-question>
+@if (currentQuestion()) {<app-question
+  [selectedAnswer]="selectedAnswer()"
+  (answerQuestion)="onAnswerQuestion($event)"
+  [question]="currentQuestion()!"
+></app-question>
 
 <div class="buttons">
-    <button  class="button is-link" [class.is-outlined]="isPrev()" [disabled]="!isPrev()" (click)="prevQuestion()">Prev</button>
-    @if(isNext()){
-    <button [disabled]="!isNext()" class="button  is-link is-outlined" (click)="nextQuestion()">Next</button>
+  <button
+    class="button is-link"
+    [class.is-outlined]="isPrev()"
+    [disabled]="!isPrev()"
+    (click)="prevQuestion()"
+  >
+    Prev
+  </button>
+  @if(isNext()){
+  <button
+    [disabled]="!isNext()"
+    class="button is-link is-outlined"
+    (click)="nextQuestion()"
+  >
+    Next
+  </button>
 
+  }@else {
+  <button class="button is-link is-outlined" (click)="viewScore()">
+    View Score
+  </button>
 
-    }@else {
-    <button class="button  is-link is-outlined" (click)="viewScore()">View Score</button>
-
-    }
+  }
 </div>
 
+} @else if (!isLoading()) { Welcome to QuizTime! What would you like to quiz
+yourself about?
+<input #category (keyup.enter)="onSubmitCategory(category.value)" />
+} @if (isLoading()) { Loading your quiz! Relax, this will take a while. Probably
+30 seconds or so. Imagine a cool spinner here. }

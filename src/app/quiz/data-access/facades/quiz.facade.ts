@@ -2,10 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { QuizStore } from '@quiz/data-access/store/quiz.store';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class QuizFacade {
-
   #quizStore = inject(QuizStore);
 
   currentQuestion = this.#quizStore.currentQuestion;
@@ -14,24 +13,25 @@ export class QuizFacade {
   currentQuestionAnswer = this.#quizStore.currentQuestionAnswer;
   isPrev = this.#quizStore.isPrev;
   isNext = this.#quizStore.isNext;
+  isLoading = this.#quizStore.isLoading;
 
-  constructor() {
-    this.#quizStore.loadQuestions();
-   }
-
-   answerQuestion(answer:number){
+  answerQuestion(answer: number) {
     this.#quizStore.answerQuestion(answer);
-   }
+  }
 
-   prevQuestion(){
+  prevQuestion() {
     this.#quizStore.prevQuestion();
-   }
+  }
 
-   nextQuestion(){
+  nextQuestion() {
     this.#quizStore.nextQuestion();
-   }
+  }
 
-   resetQuiz(){
+  resetQuiz() {
     this.#quizStore.resetQuiz();
-   }
+  }
+
+  submitCategory(category: string) {
+    this.#quizStore.loadQuestions(category);
+  }
 }

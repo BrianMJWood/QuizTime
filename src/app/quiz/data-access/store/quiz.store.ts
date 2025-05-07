@@ -8,13 +8,16 @@ import {
 } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Question, QuizState } from '@quiz/data-access/quiz.models';
-import { pipe, switchMap, tap } from 'rxjs';
+import { catchError, map, pipe, switchMap, tap, throwError } from 'rxjs';
+import { tapResponse } from '@ngrx/operators';
 import { QuizService } from '../services/quiz.service';
 
 const initialState: QuizState = {
   questions: [],
   activeQuestion: 0,
   answers: {},
+  isLoading: false,
+  error: '',
 };
 
 export const QuizStore = signalStore(
@@ -28,19 +31,26 @@ export const QuizStore = signalStore(
       patchState(store, () => ({ activeQuestion: store.activeQuestion() - 1 }));
     },
     answerQuestion: (answer: number) => {
-      console.log(answer);
       const answers = { ...store.answers(), [store.activeQuestion()]: answer };
       patchState(store, { answers });
     },
     resetQuiz: () => {
       patchState(store, { activeQuestion: 0, answers: {} });
     },
-    loadQuestions: rxMethod<void>(
+    loadQuestions: rxMethod<string>(
       pipe(
-        switchMap(() =>
-          quizService.getQuestions()?.pipe(
-            tap((questions: Array<Question>) => {
-              patchState(store, { questions });
+        tap(() => patchState(store, { isLoading: true })),
+        switchMap((category) =>
+          quizService.getQuestions(category).pipe(
+            map(
+              (response) => JSON.parse(response.answer.content) as Question[]
+            ),
+            tapResponse({
+              next: (questions) => patchState(store, { questions }),
+              error: () => {
+                patchState(store, { error: 'Something went wrong!' });
+              },
+              finalize: () => patchState(store, { isLoading: false }),
             })
           )
         )
