@@ -35,7 +35,7 @@ export const QuizStore = signalStore(
       patchState(store, { answers });
     },
     resetQuiz: () => {
-      patchState(store, { activeQuestion: 0, answers: {} });
+      patchState(store, { activeQuestion: 0, answers: {}, questions: [] });
     },
     loadQuestions: rxMethod<string>(
       pipe(
